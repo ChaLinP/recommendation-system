@@ -195,28 +195,24 @@ def recommend_items_month(selected_month: str, top_n: int = 3) -> List[Tuple[str
 
 
 ### Hybrid recommendation system combining user-based, item-based, and content-based recommendations
-def hybrid_recommendation(user, product_name, selected_month, w_user_user=0.4, w_item_item=0.3, w_content=0.2, w_seasonal=0.1):
+def hybrid_recommendation(user, product_name, w_user_user=0.4, w_item_item=0.3, w_content=0.2):
     # Fetch recommendations from each recommendation type
     user_recommendations = recommend_products_by_user(user)  # User-based
     item_item_score = recommend_items_item_based(user)  # Item-based
     content_score = similar_products(product_name)  # Content-based
-    seasonal_recommendations = recommend_items_month(selected_month)  # Seasonal recommendations
 
     # Handle potential None return from similar_products and seasonal_recommendations
     if content_score is None:
         content_score = []
-    if seasonal_recommendations is None:
-        seasonal_recommendations = []
 
     # Create sets of product names from each recommendation list
     user_user_set = set([prod for prod, _ in user_recommendations])
     item_item_set = set([prod for prod, _ in item_item_score])
     content_set = set([prod for prod, _ in content_score])
-    seasonal_set = set([prod for prod, _ in seasonal_recommendations])
 
     # Weighted combination of all recommendations
     final_recommendations = {}
-    for item in user_user_set.union(item_item_set).union(content_set).union(seasonal_set):
+    for item in user_user_set.union(item_item_set).union(content_set):
         score = 0
         if item in user_user_set:
             score += w_user_user
@@ -224,8 +220,7 @@ def hybrid_recommendation(user, product_name, selected_month, w_user_user=0.4, w
             score += w_item_item
         if item in content_set:
             score += w_content
-        if item in seasonal_set:
-            score += w_seasonal
+
         final_recommendations[item] = score
 
     # Retrieve product names and image URLs for the top recommendations
@@ -257,10 +252,9 @@ selected_product_name = st.selectbox(
 )
 # Button to get hybrid recommendations based on user input
 if st.button("Recommend"):
-    current_date = pd.to_datetime("now")
-    selected_month = current_date.strftime('%Y-%m')
+
     # Get hybrid recommendations
-    hybrid_recommendations = hybrid_recommendation(text_input, selected_product_name,selected_month)
+    hybrid_recommendations = hybrid_recommendation(text_input, selected_product_name)
 
     if hybrid_recommendations:
         st.write("### Recommended Products")
@@ -275,4 +269,25 @@ if st.button("Recommend"):
         st.markdown(display_df.to_html(escape=False, index=False), unsafe_allow_html=True)
     else:
         st.write(f"No recommendations found for '{selected_product_name}'.")
+
+
+current_date = pd.to_datetime("now")
+selected_month = current_date.strftime('%Y-%m')
+monthly_recommendations = recommend_items_month(selected_month)
+
+if monthly_recommendations:
+    st.write("### Monthly Recommended Products")
+
+    # Create a DataFrame for display with images and product names
+    monthly_display_df = pd.DataFrame({
+        "Image": [f'<img src="{img}" width="150" />' for _, img in monthly_recommendations],
+        "Product Name": [name for name, _ in monthly_recommendations]
+    })
+
+    # Display the DataFrame as HTML with images
+    st.markdown(monthly_display_df.to_html(escape=False, index=False), unsafe_allow_html=True)
+else:
+    st.write("No monthly recommendations found.")
+
+
 
