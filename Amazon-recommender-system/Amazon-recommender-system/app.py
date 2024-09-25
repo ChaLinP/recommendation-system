@@ -23,7 +23,7 @@ def connect_to_db():
     return conn
 
 # Function to load product data from the database
-@st.cache_data
+@st.cache_data(ttl=600)
 def load_product_data() -> pd.DataFrame:
     conn = connect_to_db()
     query = "SELECT ProdID, ProdName, ImageURL FROM products"
@@ -32,7 +32,7 @@ def load_product_data() -> pd.DataFrame:
     return product_df
 
 # Function to load user data and their transactions from the database
-@st.cache_data
+@st.cache_data(ttl=600)
 def load_user_data() -> pd.DataFrame:
     conn = connect_to_db()
     query = "SELECT Username, Transactions FROM transactions"
@@ -70,11 +70,24 @@ def similar_products(product_name: str, top_n: int = 5) -> List[Tuple[str, str]]
 
 
 ### Function to recommend items using item-item collaborative filtering
-def recommend_items_item_based(user: str, top_n: int = 5) -> List[Tuple[str, str]]:
+def recommend_items_item_based(user: str, top_n: int = 4) -> List[Tuple[str, str]]:
     # Check if user exists in the user-item matrix
     if user not in user_item_matrix.index:
-        st.write(f"No ratings found for user '{user}'. Please enter a valid username.")
-        return []
+        popular_items = user_item_matrix.sum().sort_values(ascending=False).head(top_n)
+
+        recommendations = []
+        for item in popular_items.index:
+            # Fetch product name and image for each popular item
+            prod_name = product_df.loc[product_df['ProdID'] == item, 'ProdName'].values[0]
+            image_url = product_df.loc[product_df['ProdID'] == item, 'ImageURL'].values[0]
+
+            image_urls_list = image_url.split(',') if isinstance(image_url, str) else [image_url]
+            first_image_url = image_urls_list[0].strip()
+
+            recommendations.append((prod_name, first_image_url))
+
+        return recommendations
+
     # Get user's ratings and compute similarity scores with other items
     user_ratings = user_item_matrix.loc[user]
     similar_items = item_similarity_df.dot(user_ratings).sort_values(ascending=False)
@@ -156,7 +169,7 @@ def recommend_products_by_user(username: str, top_n: int = 5) -> List[Tuple[str,
 
 
 ### Function to recommend items based on the selected month
-def recommend_items_month(selected_month: str, top_n: int = 3) -> List[Tuple[str, str]]:
+def recommend_items_month(selected_month: str, top_n: int = 5) -> List[Tuple[str, str]]:
     # Convert the selected month string to a datetime object for manipulation
     selected_month_dt = pd.to_datetime(selected_month)
 
