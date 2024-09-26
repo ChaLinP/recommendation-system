@@ -18,6 +18,7 @@ This project is developed as part of the third-year first-semester project for t
   **Content-Based Filtering:**
   Recommends items based on their features.
   Similar products are suggested based on user interactions.
+  
   **Item-based Collaborative Filtering:**
   Suggests items based on user purchase patterns.
   Items frequently bought together are recommended.
