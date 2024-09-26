@@ -38,9 +38,9 @@ This project is developed as part of the third-year first-semester project for t
 
   ## Technologies Used
 
-- **Frontend**: Streamlit
-- **Backend**: Python
-- **Database**: My SQL
+  - **Frontend**: Streamlit
+  - **Backend**: Python
+  - **Database**: My SQL
 
   ## Installation
 
