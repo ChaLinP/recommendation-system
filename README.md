@@ -31,7 +31,7 @@ This project is developed as part of the third-year first-semester project for t
     Combines all methods for better accuracy.
     Provides personalized and frequent co-purchase recommendations.
   
- - **Monthly Support Filtering:**
+  - **Monthly Support Filtering:**
     Recommends items with high support from previous months.
     For example, items with significant support in September 2023 are recommended to users in September 2024.
     It helps highlight seasonal or trending products based on historical popularity.
