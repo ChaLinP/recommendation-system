@@ -15,10 +15,10 @@ This project is developed as part of the third-year first-semester project for t
 
   ## Features
 
-  #### Content-Based Filtering:
+  **Content-Based Filtering:**
   Recommends items based on their features.
   Similar products are suggested based on user interactions.
-  #### Item-based Collaborative Filtering:
+  **Item-based Collaborative Filtering:**
   Suggests items based on user purchase patterns.
   Items frequently bought together are recommended.
   #### Association Rule-Based Filtering
@@ -32,12 +32,18 @@ This project is developed as part of the third-year first-semester project for t
   For example, items with significant support in September 2023 are recommended to users in September 2024.
   It helps highlight seasonal or trending products based on historical popularity.
 
+  ## Technologies Used
+
+- **Frontend**: Streamlit
+- **Backend**: Python
+- **Database**: My SQL
+
   ## Installation
 
 **Clone the repository**
   ```bash
   git clone https://github.com/your-username/repo-name.git
-  cd repo-name
+  cd recommendation-system
 
 
 
