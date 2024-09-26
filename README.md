@@ -46,7 +46,7 @@ This project is developed as part of the third-year first-semester project for t
 
 **Clone the repository**
   ```bash
-  git clone https://github.com/your-username/repo-name.git
+  git clone https://github.com/ChaLinP/recommendation-system.git
   cd recommendation-system
 
 
