@@ -48,7 +48,17 @@ This project is developed as part of the third-year first-semester project for t
   ```bash
   git clone https://github.com/ChaLinP/recommendation-system.git
   cd recommendation-system
+  ```
+**Set up the Database**
+  Ensure you have My SQL
 
+  ## Contributers
+- Chanmi
+- Nimsi
+- Thisari
+- Pasindi
 
+  ## License
+  This project is licensed under the MIT License. See the LICENSE file for details.
 
   
